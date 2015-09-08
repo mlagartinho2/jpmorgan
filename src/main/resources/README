@@ -1,6 +1,8 @@
 Notes:
 - The solution uses the spring container and uses xml configuration provided in file system-configuration.xml and is built with Java 1.8
 
+
+
 Assumptions
 - The Ticker price of a Stock will be initially equals to the Par Value. After the first Trade has been recorded, it will assume the Stock Price.
 - Since no information is provided about the format number that the prices and ratios should have, all of the output will be presented with 2 decimal places and stored internally as double.
