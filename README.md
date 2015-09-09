@@ -2,7 +2,7 @@
 
 Notes:
 
-- The solution uses the spring container and uses xml configuration provided in file system-configuration.xml and is built with Java 1.8
+- The solution uses the spring container with xml configuration provided in file system-configuration.xml and is built with Java 1.8
 - The initial list of Stocks is defined inside the system-configuration.xml, though a list of beans which is injected on the StockController bean.
 
 Assumptions
