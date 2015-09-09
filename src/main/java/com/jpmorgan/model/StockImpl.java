@@ -2,13 +2,17 @@ package com.jpmorgan.model;
 
 import com.jpmorgan.utils.FormatUtils;
 
+/**
+ * @author marcolagartinho
+ * 
+ * Class Representing A Stock
+ *
+ */
 public class StockImpl implements Stock{
 
-	
-		
 		private String symbol;
 		private StockTypes type;
-		private int lastDividend;
+		private double lastDividend;
 		private double fixedDividend;
 		private double parValue;
 		private double stockPrice;
@@ -35,10 +39,10 @@ public class StockImpl implements Stock{
 		public void setType(StockTypes type) {
 			this.type = type;
 		}
-		public int getLastDividend() {
+		public double getLastDividend() {
 			return lastDividend;
 		}
-		public void setLastDividend(int lastDividend) {
+		public void setLastDividend(double lastDividend) {
 			this.lastDividend = lastDividend;
 		}
 		public double getFixedDividend() {
@@ -76,11 +80,11 @@ public class StockImpl implements Stock{
 		
 		public String toString(){
 			return "Symbol: " + FormatUtils.padRight(symbol,3) + 
-					", Ticker Price: " + FormatUtils.padLeft(new Double(tickerPrice).toString(),5) +
+					", Ticker Price: " + FormatUtils.padLeft(FormatUtils.formatAmount(tickerPrice),10) +
 					", Type: " + FormatUtils.padRight(type.toString(),9) + 
-					", Last Dividend: " + FormatUtils.padLeft(new Integer(lastDividend).toString(),5) + 
-					", Fixed Dividend: " + FormatUtils.padLeft(new Double(fixedDividend).toString(),5) + 
-					", Par Value: " + FormatUtils.padLeft(new Double(parValue).toString(),5);
+					", Last Dividend: " + FormatUtils.padLeft(FormatUtils.formatAmount(lastDividend),10) + 
+					", Fixed Dividend: " + FormatUtils.padLeft(FormatUtils.formatAmount(fixedDividend),10) + 
+					", Par Value: " + FormatUtils.padLeft(FormatUtils.formatAmount(parValue).toString(),10);
 		}
 		@Override
 		public int hashCode() {
@@ -91,7 +95,8 @@ public class StockImpl implements Stock{
 			result = prime * result + (int) (temp ^ (temp >>> 32));
 			temp = Double.doubleToLongBits(fixedDividend);
 			result = prime * result + (int) (temp ^ (temp >>> 32));
-			result = prime * result + lastDividend;
+			temp = Double.doubleToLongBits(lastDividend);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
 			temp = Double.doubleToLongBits(parValue);
 			result = prime * result + (int) (temp ^ (temp >>> 32));
 			temp = Double.doubleToLongBits(peRatio);
@@ -117,7 +122,7 @@ public class StockImpl implements Stock{
 				return false;
 			if (Double.doubleToLongBits(fixedDividend) != Double.doubleToLongBits(other.fixedDividend))
 				return false;
-			if (lastDividend != other.lastDividend)
+			if (Double.doubleToLongBits(lastDividend) != Double.doubleToLongBits(other.lastDividend))
 				return false;
 			if (Double.doubleToLongBits(parValue) != Double.doubleToLongBits(other.parValue))
 				return false;

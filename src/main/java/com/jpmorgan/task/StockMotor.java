@@ -8,6 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jpmorgan.controller.StockController;
 import com.jpmorgan.model.Trade;
 
+/**
+ * @author marcolagartinho
+ * 
+ * Thread that calculates the Stock Value, the Dividend Yield and the P/E RATIO for each symbol
+ * added on the queue controlled by the Drop Object
+ * 
+ * this thread terminates whenever a message containing  Drop.FINALIZE_MESSAGE is received
+ *
+ */
 public class StockMotor implements Runnable {
 
 	@Autowired
@@ -39,7 +48,7 @@ public class StockMotor implements Runnable {
 	        		keepGoing = false;
 	        	else{
 	        		
-	        		//for the symbol received perform the calculations
+	        		//perform the calculations for the symbol received 
 	        		
 	        		stockController.calculateStockPrice(message);
 	        		stockController.calculateDividendYield(message);

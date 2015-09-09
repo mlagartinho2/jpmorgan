@@ -1,6 +1,10 @@
 package com.jpmorgan.model;
 
 
+/**
+ * @author marcolagartinho
+ * Interface that defines the behavior of a Stock
+ */
 public interface Stock {
 	public enum StockTypes {COMMON, PREFERRED}
 	
@@ -10,8 +14,8 @@ public interface Stock {
 	public void setSymbol(String symbol) ;
 	public StockTypes getType() ;
 	public void setType(StockTypes type) ;
-	public int getLastDividend() ;
-	public void setLastDividend(int lastDividend) ;
+	public double getLastDividend() ;
+	public void setLastDividend(double lastDividend) ;
 	public double getFixedDividend() ;
 	public void setFixedDividend(double fixedDividend) ;
 	public double getParValue() ;

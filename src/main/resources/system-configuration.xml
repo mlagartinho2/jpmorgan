@@ -18,9 +18,39 @@
 
 
 		<context:component-scan base-package="com.jpmorgan.controller, com.jpmorgan.service" />
+		<util:properties id="appProperties" location="config.properties"/>
 		
 		
 		
+	
+	
+		
+	<bean id="stockController" class="com.jpmorgan.controller.StockController" destroy-method="cleanUp"/>
+	
+	<bean id="dropTrades" class="com.jpmorgan.task.Drop"/>
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+		p:corePoolSize="1"
+		p:maxPoolSize="1"
+	/>
+	<bean id="motorExecutor" class="com.jpmorgan.task.StockMotor"/>
+	<bean id="stockMotorExecutor" class="com.jpmorgan.task.StockMotorExecutor" >
+		<constructor-arg ref="taskExecutor" />
+		<constructor-arg ref="motorExecutor" />
+	</bean>
+		
+	<!--  INITIAL STOCK CONFIGURATION -->		
+		<bean id="stockService" class="com.jpmorgan.service.SimpleStockManager" >
+		    <property name="stocks">
+		        <map key-type="java.lang.String" value-type="com.jpmorgan.model.StockImpl">
+					<entry key="TEA" value-ref="TEA"/>
+					<entry key="POP" value-ref="POP"/>
+					<entry key="ALE" value-ref="ALE"/>
+					<entry key="GIN" value-ref="GIN"/>
+					<entry key="JOE" value-ref="JOE"/>		
+				</map>
+		    </property>
+		</bean>	
 		<bean name="TEA" class="com.jpmorgan.model.StockImpl"
 			p:symbol="TEA"
 			p:type="COMMON"
@@ -56,30 +86,5 @@
 			p:fixedDividend="0"
 			p:parValue="250"
 		/>
-	
-		<bean id="stockService" class="com.jpmorgan.service.SimpleStockManager" >
-		    <property name="stocks">
-		        <map key-type="java.lang.String" value-type="com.jpmorgan.model.StockImpl">
-					<entry key="TEA" value-ref="TEA"/>
-					<entry key="POP" value-ref="POP"/>
-					<entry key="ALE" value-ref="ALE"/>
-					<entry key="GIN" value-ref="GIN"/>
-					<entry key="JOE" value-ref="JOE"/>		
-				</map>
-		    </property>
-		</bean>
-	<bean id="stockController" class="com.jpmorgan.controller.StockController" destroy-method="cleanUp"/>
-	<bean id="dropTrades" class="com.jpmorgan.task.Drop"/>
-	
-	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-		p:corePoolSize="1"
-		p:maxPoolSize="1"
-	/>
-	<bean id="motorExecutor" class="com.jpmorgan.task.StockMotor"/>
-	<bean id="stockMotorExecutor" class="com.jpmorgan.task.StockMotorExecutor" >
-		<constructor-arg ref="taskExecutor" />
-		<constructor-arg ref="motorExecutor" />
-	</bean>
-		
 	
 </beans>

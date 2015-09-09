@@ -1,9 +1,68 @@
 Notes:
 - The solution uses the spring container and uses xml configuration provided in file system-configuration.xml and is built with Java 1.8
+- the files provided are a direct exportation of a project from the Spring Tool Suite IDE
+- The initial list of Stocks is defined inside the system-configuration.xml, though a list of beans which is injected on the StockController bean.
 
 
-z
+
 Assumptions
 - The Ticker price of a Stock will be initially equals to the Par Value. After the first Trade has been recorded, it will assume the Stock Price.
-- Since no information is provided about the format number that the prices and ratios should have, all of the output will be presented with 2 decimal places and stored internally as double.
+- Since no information is provided about the format number that the prices in pennies and ratios should have, all of the output will be presented with 2 decimal places and stored internally as double.
+- The dividend portion on the P/E Ratio formula will be last dividend value provided for each Stock on the test description
 
+
+Assuming that the ticker price is the stock price every time a trade recorded all the Stock Price, Dividend Yield and P/E Ratio will have to be updated.
+In order to avoid calculating repetitiously those formulas each time a client requests the values, a thread was implemented to provide asynchronous processing. This thread – implemented by the class StockMotor will keep the values updated each time a trade is recorded.
+
+The application keeps the recorded trades in memory in the follow structure:
+
+HashMap <String (stock symbol), TreeMap <Long (time stamp), LinkedList <Trade Object> > >
+
+The TreeMap is sorted by time stamp, allowing the use of method tailMap to retrieved the trades with a time stamp bigger than the given value (15 minutes)
+The values in the TreeMap are Lists of Objects Trade to allow more than Trade of the same Stock Symbol to be save at the same time.
+
+The application have one properties file - config.properties - where the amount of minutes for the Stock Price formula can be defined.
+
+
+Class Struture:
+
+Package com.jpmorgan
+Class App – Runnable class that implements a simple text interface. It allows to perform the requested calculations, lists the stocks and the registered trades for each stock
+
+package com.jpmorgan.controller
+class StockController - provides access to clients to business logic methods.
+
+Package com.jpmorgan.service
+
+interface TradeManager – defines the behaviorof the TradeManager 
+interface StockManager - defines the behavior of the Stock Manager
+class SimpleStockManager - manages operations on Stocks
+class SimpleTradeManager - manage operations on Trades
+
+
+package com.jpmorgan.task
+class StockMotor - Thread that calculates the Stock Value, the Dividend Yield and the P/E RATIO for each symbol added on the queue controlled by the Drop Object. This thread terminates whenever a message containing Drop.FINALIZE_MESSAGE is received. This message is send by the cleanup method of the StockManager which is defined as destroy-method on the spring xml configuration file (bean stockController)
+
+class Drop provides 2 synchronized methods to add and remove Strings from a TreeSet, Every time a Trade is recorded, the StockContoller calls the put method to add a String containing the stock symbol of the Trade to the TreeSet.
+The TreeSet was choosen here because:
+-	Since it doesn't allow repeated values, if stock symbol exists on the set, the string is not added and so duplicated and unnecessary calculations are prevent. 
+-	It also provides the pollFirst() method, wich retrieves and removes the first element.
+-	The order of in which the elements are retrieved doesn’t matter
+
+package com.jpmorgan.model
+
+interface Trade - defines the behavior of a Trade
+interface Stock - defines the behavior of a Stock
+class StockImpl – Implements the Stock Entity, since the all data is held in memory instances of this class will keep the information about the Stocks
+class TradeImpl – Implements the Trede Entity, instances of this class will keep the information about the Trades.
+
+
+package com.jpmorgan.utils
+final class FormatUtils  - Final class that provides methods to format dates, strings and numbers
+
+
+package tests
+
+class SetupTests - JUnit Test that asserts that the initial stock list is correctly initialized 
+class ExecutionTests – contains to tests, one asserting that a trade will not be retrieved after a given period of time. Although the application has a time out of 15 minutes, this test is set to wait only for 1 minute. The other test asserts that 2 trades for the  same stock will be keep in memory.
+class FormulasTests – JUnit Test that asserts that the all the formulas are being calculated correctly 

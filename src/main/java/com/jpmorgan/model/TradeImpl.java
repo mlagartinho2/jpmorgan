@@ -4,9 +4,12 @@ import java.time.Instant;
 
 import com.jpmorgan.utils.FormatUtils;
 
+/**
+ * @author marcolagartinho
+ * Class Representing a Trade
+ *
+ */
 public class TradeImpl implements Trade{
-	
-	
 	
 	
 	private OperationType operationType;
@@ -50,7 +53,7 @@ public class TradeImpl implements Trade{
 		
 	 
 		return "Symbol: " + FormatUtils.padRight(stockSymbol,3) + 
-				", Type: " + FormatUtils.padLeft(operationType.toString(),5) + 
+				", Type: " + FormatUtils.padRight(operationType.toString(),5) + 
 				", Price: " + FormatUtils.padLeft(new Double(tradePrice).toString(),10) + 
 				", Quantity: " + FormatUtils.padLeft(new Integer(quantity).toString(),10) + 
 				", Date: " + FormatUtils.padLeft(FormatUtils.formatDate(tradeDateTime),20);

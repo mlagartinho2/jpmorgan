@@ -4,6 +4,10 @@ import java.util.Map;
 
 import com.jpmorgan.model.StockImpl;
 
+/**
+ * @author marcolagartinho
+ * Inteface defining the behavior of the Stock Manager
+ */
 public interface StockManager {
 	public void setStocks(Map<String,StockImpl> sList);
 		

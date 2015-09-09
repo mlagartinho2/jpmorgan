@@ -2,6 +2,10 @@ package com.jpmorgan.model;
 
 import java.time.Instant;
 
+/**
+ * @author marcolagartinho
+ * Interface that defines the behavior of a Trade
+ */
 public interface Trade {
 	
 	public enum OperationType {SELL, BUY}

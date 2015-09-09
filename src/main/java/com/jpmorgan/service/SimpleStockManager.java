@@ -12,7 +12,7 @@ import com.jpmorgan.model.Trade;
 /**
  * @author marcolagartinho
  * 
- *
+ * Class to Manage Operations on Stocks
  */
 public class SimpleStockManager implements StockManager {
 	
